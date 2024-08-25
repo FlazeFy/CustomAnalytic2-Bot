@@ -13,6 +13,7 @@ const { repoAllShips } = require('./modules/ships/repositories')
 const { repoAllWeapons } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles } = require('./modules/vehicles/repositories')
+const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides } = require('./modules/facilities/repositories')
 
 const bot = new Telegraf(conf.TOKEN)
 
@@ -22,6 +23,9 @@ const menuOptions = [
     '/Show All Event',
     '/Show All Weapon',
     '/Show All Vehicle',
+    '/Show Total Facilities By Type',
+    '/Show Total Facilities By Country',
+    '/Show Total Facilities By Side'
 ];
 
 bot.start( async (ctx) => {
@@ -66,6 +70,19 @@ bot.on('message', async (ctx) => {
                     [msg,page] = await repoAllVehicles()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
                     break
+                case 5:
+                    [msg,page] = await repoShowFacilitiesByCountry()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all country...\n\n${msg}`)
+                    break
+                case 6:
+                    [msg,page] = await repoShowFacilitiesByType()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all type...\n\n${msg}`)
+                    break
+                case 7:
+                    [msg,page] = await repoShowFacilitiesBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all sides...\n\n${msg}`)
+                    break
+                
                 default:
                     ctx.reply(`Sorry I'dont know your command`)
                     break
