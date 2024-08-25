@@ -2,7 +2,7 @@ const { handleShowAllAirplane } = require("./queries")
 
 const repoAllAirplane = async () => {
     try {
-        const [data, page_length, status] = await handleShowAllAirplane(15,'desc')
+        const [data, page_length, status] = await handleShowAllAirplane(20,'desc')
         
         if(data){
             let msg = ''

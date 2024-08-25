@@ -2,7 +2,7 @@ const { handleShowAllShips } = require("./queries")
 
 const repoAllShips = async () => {
     try {
-        const [data, page_length, status] = await handleShowAllShips(15,'desc')
+        const [data, page_length, status] = await handleShowAllShips(20,'desc')
         
         if(data){
             let msg = ''

@@ -10,12 +10,18 @@ const { repoAllAirplane } = require('./modules/airplane/repositories')
 // Helpers
 const { generateRandomNumber } = require('./helpers/generator')
 const { repoAllShips } = require('./modules/ships/repositories')
+const { repoAllWeapons } = require('./modules/weapons/repositories')
+const { repoAllEvents } = require('./modules/events/repositories')
+const { repoAllVehicles } = require('./modules/vehicles/repositories')
 
 const bot = new Telegraf(conf.TOKEN)
 
 const menuOptions = [
     '/Show All Airplane',
-    '/Show All Ships',
+    '/Show All Ship',
+    '/Show All Event',
+    '/Show All Weapon',
+    '/Show All Vehicle',
 ];
 
 bot.start( async (ctx) => {
@@ -47,6 +53,18 @@ bot.on('message', async (ctx) => {
                 case 1:
                     [msg,page] = await repoAllShips()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`)
+                    break
+                case 2:
+                    [msg,page] = await repoAllEvents()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`)
+                    break
+                case 3:
+                    [msg,page] = await repoAllWeapons()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`)
+                    break
+                case 4:
+                    [msg,page] = await repoAllVehicles()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
                     break
                 default:
                     ctx.reply(`Sorry I'dont know your command`)
