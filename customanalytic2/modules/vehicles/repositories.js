@@ -1,4 +1,4 @@
-const { handleShowAllVehicles } = require("./queries")
+const { handleShowAllVehicles, handleShowVehiclesByRole, handleShowVehiclesByCountry, handleShowVehiclesBySides } = require("./queries")
 
 const repoAllVehicles = async () => {
     try {
@@ -19,6 +19,66 @@ const repoAllVehicles = async () => {
     }
 }
 
+const repoShowVehiclesByCountry = async () => {
+    try {
+        const [data, status] = await handleShowVehiclesByCountry(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Country : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowVehiclesByRole = async () => {
+    try {
+        const [data, status] = await handleShowVehiclesByRole(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Role : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowVehiclesBySides = async () => {
+    try {
+        const [data, status] = await handleShowVehiclesBySides(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Sides : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
-    repoAllVehicles
+    repoAllVehicles,
+    repoShowVehiclesByCountry,
+    repoShowVehiclesByRole,
+    repoShowVehiclesBySides
 }

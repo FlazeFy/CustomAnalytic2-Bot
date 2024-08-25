@@ -26,7 +26,7 @@ const repoShowFacilitiesByType = async () => {
         if(data){
             let msg = ''
             data.forEach((el,idx) => {
-                msg += `Country : ${el.context}\nTotal : ${el.total}\n\n`
+                msg += `Type : ${el.context}\nTotal : ${el.total}\n\n`
             });
 
             return [msg, null]
@@ -45,7 +45,7 @@ const repoShowFacilitiesBySides = async () => {
         if(data){
             let msg = ''
             data.forEach((el,idx) => {
-                msg += `Country : ${el.context}\nTotal : ${el.total}\n\n`
+                msg += `Side : ${el.context}\nTotal : ${el.total}\n\n`
             });
 
             return [msg, null]
