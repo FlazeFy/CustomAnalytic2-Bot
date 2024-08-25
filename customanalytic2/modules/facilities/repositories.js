@@ -40,7 +40,7 @@ const repoShowFacilitiesByType = async () => {
 
 const repoShowFacilitiesBySides = async () => {
     try {
-        const [data, status] = await handleShowFacilitiesBySides(20)
+        const [data, status] = await handleShowFacilitiesBySides()
         
         if(data){
             let msg = ''

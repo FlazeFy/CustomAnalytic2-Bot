@@ -19,6 +19,67 @@ const repoAllEvents = async () => {
     }
 }
 
+
+const repoShowAirplanesByCountry = async () => {
+    try {
+        const [data, status] = await handleShowAirplanesByCountry(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Country : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowAirplanesByRole = async () => {
+    try {
+        const [data, status] = await handleShowAirplanesByRole(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Role : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowAirplanesBySides = async () => {
+    try {
+        const [data, status] = await handleShowAirplanesBySides()
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Sides : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
-    repoAllEvents
+    repoAllEvents,
+    repoShowAirplanesByCountry,
+    repoShowAirplanesByRole,
+    repoShowAirplanesBySides
 }

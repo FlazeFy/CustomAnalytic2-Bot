@@ -59,7 +59,7 @@ const repoShowVehiclesByRole = async () => {
 
 const repoShowVehiclesBySides = async () => {
     try {
-        const [data, status] = await handleShowVehiclesBySides(20)
+        const [data, status] = await handleShowVehiclesBySides()
         
         if(data){
             let msg = ''
