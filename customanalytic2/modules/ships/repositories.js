@@ -1,4 +1,4 @@
-const { handleShowAllShips } = require("./queries")
+const { handleShowAllShips, handleShowShipsByClass,handleShowShipsBySides,handleShowShipsByCountry } = require("./queries")
 
 const repoAllShips = async () => {
     try {
@@ -19,6 +19,67 @@ const repoAllShips = async () => {
     }
 }
 
+const repoShowShipsByCountry = async () => {
+    try {
+        const [data, status] = await handleShowShipsByCountry(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Country : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowShipsByClass = async () => {
+    try {
+        const [data, status] = await handleShowShipsByClass(20)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Class : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+const repoShowShipsBySides = async () => {
+    try {
+        const [data, status] = await handleShowShipsBySides()
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Sides : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
+
 module.exports = {
-    repoAllShips
+    repoAllShips,
+    repoShowShipsByCountry,
+    repoShowShipsBySides,
+    repoShowShipsByClass
 }

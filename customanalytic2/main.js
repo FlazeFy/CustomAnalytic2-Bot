@@ -9,7 +9,7 @@ const { generateRandomNumber } = require('./helpers/generator')
 
 // Modules
 const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole } = require('./modules/airplane/repositories')
-const { repoAllShips } = require('./modules/ships/repositories')
+const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides } = require('./modules/ships/repositories')
 const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole } = require('./modules/vehicles/repositories')
@@ -23,6 +23,9 @@ const menuOptions = [
     '/Show Total Airplane By Role',
     '/Show Total Airplane By Sides',
     '/Show All Ship',
+    '/Show Total Ship By Country',
+    '/Show Total Ship By Role',
+    '/Show Total Ship By Sides',
     '/Show All Event',
     '/Show All Weapon',
     '/Show Total Weapon By Country',
@@ -80,54 +83,67 @@ bot.on('message', async (ctx) => {
                     [msg, page] = await repoAllShips();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`);
                     break;
-                case 5: // Show All Events
+                case 5: // Show Total Ships by Country
+                    [msg, page] = await repoShowShipsByCountry();
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's country...\n\n${msg}`);
+                    break;
+                case 6: // Show Total Ships by Class
+                    [msg, page] = await repoShowShipsByClass()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's class...\n\n${msg}`);
+                    break;
+                case 7: // Show Total Ships by Sides
+                    [msg, page] = await repoShowShipsBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's sides...\n\n${msg}`);
+                    break;
+
+                case 8: // Show All Events
                     [msg, page] = await repoAllEvents();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`);
                     break;
 
-                case 6: // Show All Weapons
+                case 9: // Show All Weapons
                     [msg, page] = await repoAllWeapons();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`);
                     break;
-                case 7: // Show Total Weapons by Country
+                case 10: // Show Total Weapons by Country
                     [msg, page] = await repoShowWeaponsByCountry();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's country...\n\n${msg}`);
                     break;
-                case 8: // Show Total Weapons by Role
+                case 11: // Show Total Weapons by Role
                     [msg, page] = await repoShowWeaponsByType();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's type...\n\n${msg}`);
                     break;
-                case 9: // Show Total Weapons by Sides
+                case 12: // Show Total Weapons by Sides
                     [msg, page] = await repoShowWeaponsBySides();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's sides...\n\n${msg}`);
                     break;
 
-                case 10: // Show All Vehicles
+                case 13: // Show All Vehicles
                     [msg, page] = await repoAllVehicles();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`);
                     break;
-                case 11: // Show Total Vehicle by Country
+                case 14: // Show Total Vehicle by Country
                     [msg, page] = await repoShowVehiclesByCountry();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's country...\n\n${msg}`);
                     break;
-                case 12: // Show Total Vehicle by Role
+                case 15: // Show Total Vehicle by Role
                     [msg, page] = await repoShowVehiclesByRole();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's role...\n\n${msg}`);
                     break;
-                case 13: // Show Total Vehicle by Sides
+                case 16: // Show Total Vehicle by Sides
                     [msg, page] = await repoShowVehiclesBySides();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's sides...\n\n${msg}`);
                     break;
 
-                case 14: // Show Total Facility by Country
+                case 17: // Show Total Facility by Country
                     [msg, page] = await repoShowFacilitiesByCountry();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's country...\n\n${msg}`);
                     break;
-                case 15: // Show Total Facility by Type
+                case 18: // Show Total Facility by Type
                     [msg, page] = await repoShowFacilitiesByType();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's type...\n\n${msg}`);
                     break;
-                case 16: // Show Total Facility by Sides
+                case 19: // Show Total Facility by Sides
                     [msg, page] = await repoShowFacilitiesBySides();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's sides...\n\n${msg}`);
                     break;

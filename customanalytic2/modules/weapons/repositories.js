@@ -45,7 +45,7 @@ const repoShowWeaponsByType = async () => {
         if(data){
             let msg = ''
             data.forEach((el,idx) => {
-                msg += `Role : ${el.context}\nTotal : ${el.total}\n\n`
+                msg += `Type : ${el.context}\nTotal : ${el.total}\n\n`
             });
 
             return [msg, null]
