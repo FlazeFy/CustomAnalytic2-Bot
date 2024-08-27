@@ -1,8 +1,9 @@
 const { handleShowAllShips, handleShowShipsByClass,handleShowShipsBySides,handleShowShipsByCountry } = require("./queries")
 
-const repoAllShips = async () => {
+const repoAllShips = async (ctx) => {
     try {
-        const [data, page_length, status] = await handleShowAllShips(20,'desc')
+        const current_page = ctx.session.currentPage || 1
+        const [data, page_length, status] = await handleShowAllShips(20,'desc',current_page)
         
         if(data){
             let msg = ''

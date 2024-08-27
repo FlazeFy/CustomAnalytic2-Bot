@@ -1,8 +1,9 @@
 const { handleShowAllVehicles, handleShowVehiclesByRole, handleShowVehiclesByCountry, handleShowVehiclesBySides } = require("./queries")
 
-const repoAllVehicles = async () => {
+const repoAllVehicles = async (ctx) => {
     try {
-        const [data, page_length, status] = await handleShowAllVehicles(20,'desc')
+        const current_page = ctx.session.currentPage || 1
+        const [data, page_length, status] = await handleShowAllVehicles(20,'desc',current_page)
         
         if(data){
             let msg = ''

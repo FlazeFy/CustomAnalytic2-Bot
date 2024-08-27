@@ -1,8 +1,9 @@
 const { handleShowAllEvents } = require("./queries")
 
-const repoAllEvents = async () => {
+const repoAllEvents = async (ctx) => {
     try {
-        const [data, page_length, status] = await handleShowAllEvents(20,'desc')
+        const current_page = ctx.session.currentPage || 1
+        const [data, page_length, status] = await handleShowAllEvents(20,'desc', current_page)
         
         if(data){
             let msg = ''

@@ -1,4 +1,4 @@
-const { Telegraf, Markup} = require('telegraf')
+const { Telegraf, Markup, session } = require('telegraf')
 const fs = require('fs')
 
 const configFile = fs.readFileSync('./configs/telegram.json', 'utf8')
@@ -14,27 +14,34 @@ const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoSh
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole } = require('./modules/vehicles/repositories')
 const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides } = require('./modules/facilities/repositories')
+const { generatePaginationBot } = require('./helpers/telegram')
 
 const bot = new Telegraf(conf.TOKEN)
+bot.use(session())
 
 const menuOptions = [
     '/Show All Airplane',
     '/Show Total Airplane By Country',
     '/Show Total Airplane By Role',
     '/Show Total Airplane By Sides',
+
     '/Show All Ship',
     '/Show Total Ship By Country',
-    '/Show Total Ship By Role',
+    '/Show Total Ship By Class',
     '/Show Total Ship By Sides',
+    
     '/Show All Event',
+
     '/Show All Weapon',
     '/Show Total Weapon By Country',
     '/Show Total Weapon By Type',
     '/Show Total Weapon By Sides',
+
     '/Show All Vehicle',
     '/Show Total Vehicle By Country',
     '/Show Total Vehicle By Role',
     '/Show Total Vehicle By Sides',
+
     '/Show Total Facility By Country',
     '/Show Total Facility By Type',
     '/Show Total Facility By Side'
@@ -53,6 +60,8 @@ bot.on('message', async (ctx) => {
 
     const telegramId = ctx.from.id
 
+    if (!ctx.session) ctx.session = {}
+
     if (ctx.message.text) {
         const message = ctx.message.text
         const idx_rand_present = generateRandomNumber(1,present_respond.length)
@@ -63,95 +72,136 @@ bot.on('message', async (ctx) => {
 
             switch (index) {
                 case 0: // Show All Airplanes
-                    [msg, page] = await repoAllAirplane();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoAllAirplane(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Airplane')
+                    break
                 case 1: // Show Total Airplane by Country
-                    [msg, page] = await repoShowAirplanesByCountry();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's country...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowAirplanesByCountry()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's country...\n\n${msg}`)
+                    break
                 case 2: // Show Total Airplane by Role
-                    [msg, page] = await repoShowAirplanesByRole();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's role...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowAirplanesByRole()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's role...\n\n${msg}`)
+                    break
                 case 3: // Show Total Airplane by Sides
-                    [msg, page] = await repoShowAirplanesBySides();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's sides...\n\n${msg}`);
+                    [msg, page] = await repoShowAirplanesBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's sides...\n\n${msg}`)
                     break;
 
                 case 4: // Show All Ships
-                    [msg, page] = await repoAllShips();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoAllShips(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Ship')
+                    break
                 case 5: // Show Total Ships by Country
                     [msg, page] = await repoShowShipsByCountry();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's country...\n\n${msg}`);
-                    break;
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's country...\n\n${msg}`)
+                    break
                 case 6: // Show Total Ships by Class
                     [msg, page] = await repoShowShipsByClass()
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's class...\n\n${msg}`);
-                    break;
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's class...\n\n${msg}`)
+                    break
                 case 7: // Show Total Ships by Sides
                     [msg, page] = await repoShowShipsBySides()
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's sides...\n\n${msg}`);
-                    break;
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all ship's sides...\n\n${msg}`)
+                    break
 
                 case 8: // Show All Events
-                    [msg, page] = await repoAllEvents();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoAllEvents(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Event')
+                    break
 
                 case 9: // Show All Weapons
-                    [msg, page] = await repoAllWeapons();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoAllWeapons(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Weapon')
+                    break
                 case 10: // Show Total Weapons by Country
-                    [msg, page] = await repoShowWeaponsByCountry();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's country...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowWeaponsByCountry()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's country...\n\n${msg}`)
+                    break
                 case 11: // Show Total Weapons by Role
                     [msg, page] = await repoShowWeaponsByType();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's type...\n\n${msg}`);
-                    break;
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's type...\n\n${msg}`)
+                    break
                 case 12: // Show Total Weapons by Sides
-                    [msg, page] = await repoShowWeaponsBySides();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's sides...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowWeaponsBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's sides...\n\n${msg}`)
+                    break
 
                 case 13: // Show All Vehicles
-                    [msg, page] = await repoAllVehicles();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoAllVehicles(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Vehicle')
+                    break
                 case 14: // Show Total Vehicle by Country
-                    [msg, page] = await repoShowVehiclesByCountry();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's country...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowVehiclesByCountry()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's country...\n\n${msg}`)
+                    break
                 case 15: // Show Total Vehicle by Role
-                    [msg, page] = await repoShowVehiclesByRole();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's role...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowVehiclesByRole()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's role...\n\n${msg}`)
+                    break
                 case 16: // Show Total Vehicle by Sides
-                    [msg, page] = await repoShowVehiclesBySides();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's sides...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowVehiclesBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's sides...\n\n${msg}`)
+                    break
 
                 case 17: // Show Total Facility by Country
-                    [msg, page] = await repoShowFacilitiesByCountry();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's country...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowFacilitiesByCountry()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's country...\n\n${msg}`)
+                    break
                 case 18: // Show Total Facility by Type
-                    [msg, page] = await repoShowFacilitiesByType();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's type...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowFacilitiesByType()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's type...\n\n${msg}`)
+                    break
                 case 19: // Show Total Facility by Sides
-                    [msg, page] = await repoShowFacilitiesBySides();
-                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's sides...\n\n${msg}`);
-                    break;
+                    [msg, page] = await repoShowFacilitiesBySides()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's sides...\n\n${msg}`)
+                    break
                 
                 default:
                     ctx.reply(`Sorry I'dont know your command`)
                     break
             }
+        } else if(message === 'Back to Main Menu'){
+            ctx.reply(`Please choose an option in Menu:`, 
+                Markup.keyboard(menuOptions.map(option => [option])).resize()
+            );
+        } else if (/^Page \d+ - \/Show All (Airplane|Ship|Event|Weapon|Vehicle)$/.test(message)) {
+            const parts = message.split(' - ')
+            const selectedPage = parseInt(parts[0].split(' ')[1])
+            const topic = parts[1]
+            ctx.session.currentPage = selectedPage
+            let msg, page
+
+            if(topic === '/Show All Airplane'){
+                [msg, page] = await repoAllAirplane(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Airplane')
+            } else if(topic === '/Show All Ship'){
+                [msg, page] = await repoAllShips(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Ship')
+            } else if(topic === '/Show All Event'){
+                [msg, page] = await repoAllEvents(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Event')
+            } else if(topic === '/Show All Weapon'){
+                [msg, page] = await repoAllWeapons(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Weapon')
+            } else if(topic === '/Show All Vehicle'){
+                [msg, page] = await repoAllVehicles(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Vehicle')
+            }
+
+            ctx.reply(`Opened page ${selectedPage}`);
+        } else {
+            ctx.reply(`Unknown command. Please try again`)
         }
     } 
 });

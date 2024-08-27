@@ -1,8 +1,9 @@
 const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides } = require("./queries")
 
-const repoAllAirplane = async () => {
+const repoAllAirplane = async (ctx) => {
     try {
-        const [data, page_length, status] = await handleShowAllAirplane(20,'desc')
+        const current_page = ctx.session.currentPage || 1
+        const [data, page_length, status] = await handleShowAllAirplane(20,'desc',current_page)
         
         if(data){
             let msg = ''
