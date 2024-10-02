@@ -1,14 +1,14 @@
-const { handleShowAllEvents } = require("./queries")
+const { handleShowAllBooks } = require("./queries")
 
-const repoAllEvents = async (ctx) => {
+const repoAllBooks = async (ctx) => {
     try {
         const current_page = ctx.session.currentPage || 1
-        const [data, page_length, status] = await handleShowAllEvents(20,'desc', current_page)
+        const [data, page_length, status] = await handleShowAllBooks(20,'desc', current_page)
         
         if(data){
             let msg = ''
             data.forEach((el,idx) => {
-                msg += `Event Name : ${el.event}\nDate : From ${el.date_start} until ${el.date_end}\nPeriod : ${el.period} days\n\n`
+                msg += `Title : ${el.title}\nAuthor : ${el.author}\nReviewer : ${el.reviewer}\nReview Date : ${el.reviewe_date}\n\n`
             });
 
             return [msg, page_length]
@@ -21,5 +21,5 @@ const repoAllEvents = async (ctx) => {
 }
 
 module.exports = {
-    repoAllEvents
+    repoAllBooks
 }

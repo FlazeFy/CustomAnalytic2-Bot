@@ -1,4 +1,4 @@
-const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides } = require("./queries")
+const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides, handleShowAirplanesByManufacturer } = require("./queries")
 
 const repoAllAirplane = async (ctx) => {
     try {
@@ -23,7 +23,7 @@ const repoAllAirplane = async (ctx) => {
 
 const repoShowAirplanesByCountry = async () => {
     try {
-        const [data, status] = await handleShowAirplanesByCountry(20)
+        const [data, status] = await handleShowAirplanesByCountry(7)
         
         if(data){
             let msg = ''
@@ -42,7 +42,7 @@ const repoShowAirplanesByCountry = async () => {
 
 const repoShowAirplanesByRole = async () => {
     try {
-        const [data, status] = await handleShowAirplanesByRole(20)
+        const [data, status] = await handleShowAirplanesByRole(7)
         
         if(data){
             let msg = ''
@@ -78,9 +78,29 @@ const repoShowAirplanesBySides = async () => {
     }
 }
 
+const repoShowAirplanesByManufacturer = async () => {
+    try {
+        const [data, status] = await handleShowAirplanesByManufacturer(7)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Manufacturer : ${el.context}\nTotal : ${el.total}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
     repoAllAirplane,
     repoShowAirplanesByCountry,
     repoShowAirplanesByRole,
-    repoShowAirplanesBySides
+    repoShowAirplanesBySides, 
+    repoShowAirplanesByManufacturer
 }

@@ -22,7 +22,7 @@ const repoAllWeapons = async (ctx) => {
 
 const repoShowWeaponsByCountry = async () => {
     try {
-        const [data, status] = await handleShowWeaponsByCountry(20)
+        const [data, status] = await handleShowWeaponsByCountry(7)
         
         if(data){
             let msg = ''
@@ -41,7 +41,7 @@ const repoShowWeaponsByCountry = async () => {
 
 const repoShowWeaponsByType = async () => {
     try {
-        const [data, status] = await handleShowWeaponsByType(20)
+        const [data, status] = await handleShowWeaponsByType(7)
         
         if(data){
             let msg = ''

@@ -1,2 +1,3 @@
 /node_modules
 /configs/telegram.json
+/configs/telegram_stage.json

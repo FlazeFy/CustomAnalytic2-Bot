@@ -1,20 +1,22 @@
 const { Telegraf, Markup, session } = require('telegraf')
 const fs = require('fs')
 
-const configFile = fs.readFileSync('./configs/telegram.json', 'utf8')
+// const configFile = fs.readFileSync('./configs/telegram.json', 'utf8')
+const configFile = fs.readFileSync('./configs/telegram_stage.json', 'utf8')
 const conf = JSON.parse(configFile)
 
 // Helpers
 const { generateRandomNumber } = require('./helpers/generator')
 
 // Modules
-const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole } = require('./modules/airplane/repositories')
+const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole, repoShowAirplanesByManufacturer } = require('./modules/airplane/repositories')
 const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides } = require('./modules/ships/repositories')
 const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole } = require('./modules/vehicles/repositories')
 const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides } = require('./modules/facilities/repositories')
 const { generatePaginationBot } = require('./helpers/telegram')
+const { repoAllBooks } = require('./modules/book/repositories')
 
 const bot = new Telegraf(conf.TOKEN)
 bot.use(session())
@@ -24,6 +26,7 @@ const menuOptions = [
     '/Show Total Airplane By Country',
     '/Show Total Airplane By Role',
     '/Show Total Airplane By Sides',
+    '/Show Total Airplane By Manufacturer',
 
     '/Show All Ship',
     '/Show Total Ship By Country',
@@ -44,7 +47,9 @@ const menuOptions = [
 
     '/Show Total Facility By Country',
     '/Show Total Facility By Type',
-    '/Show Total Facility By Side'
+    '/Show Total Facility By Side',
+
+    '/Show All Book',
 ];
 
 bot.start( async (ctx) => {
@@ -56,7 +61,7 @@ bot.start( async (ctx) => {
 
 bot.on('message', async (ctx) => {
     // Respond / Presenting data
-    const present_respond = ['Showing','Let me show you the',"Here's the","I got the","See this"]
+    const present_respond = ['Showing','Let me show you the',"Here's the","I got the","See this","I gathered","I found"]
 
     const telegramId = ctx.from.id
 
@@ -88,78 +93,88 @@ bot.on('message', async (ctx) => {
                     [msg, page] = await repoShowAirplanesBySides()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's sides...\n\n${msg}`)
                     break;
+                case 4: // Show Total Airplane by Manufacturer
+                    [msg, page] = await repoShowAirplanesByManufacturer()
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all airplanes's manufacturer...\n\n${msg}`)
+                    break;
 
-                case 4: // Show All Ships
+                case 5: // Show All Ships
                     [msg, page] = await repoAllShips(ctx)
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ships...\n\n${msg}`)
                     generatePaginationBot(ctx,page,'/Show All Ship')
                     break
-                case 5: // Show Total Ships by Country
+                case 6: // Show Total Ships by Country
                     [msg, page] = await repoShowShipsByCountry();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ship's country...\n\n${msg}`)
                     break
-                case 6: // Show Total Ships by Class
+                case 7: // Show Total Ships by Class
                     [msg, page] = await repoShowShipsByClass()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ship's class...\n\n${msg}`)
                     break
-                case 7: // Show Total Ships by Sides
+                case 8: // Show Total Ships by Sides
                     [msg, page] = await repoShowShipsBySides()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all ship's sides...\n\n${msg}`)
                     break
 
-                case 8: // Show All Events
+                case 9: // Show All Events
                     [msg, page] = await repoAllEvents(ctx)
                     ctx.reply(`${present_respond[idx_rand_present-1]} all events...\n\n${msg}`)
                     generatePaginationBot(ctx,page,'/Show All Event')
                     break
 
-                case 9: // Show All Weapons
+                case 10: // Show All Weapons
                     [msg, page] = await repoAllWeapons(ctx)
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons...\n\n${msg}`)
                     generatePaginationBot(ctx,page,'/Show All Weapon')
                     break
-                case 10: // Show Total Weapons by Country
+                case 11: // Show Total Weapons by Country
                     [msg, page] = await repoShowWeaponsByCountry()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's country...\n\n${msg}`)
                     break
-                case 11: // Show Total Weapons by Role
+                case 12: // Show Total Weapons by Role
                     [msg, page] = await repoShowWeaponsByType();
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's type...\n\n${msg}`)
                     break
-                case 12: // Show Total Weapons by Sides
+                case 13: // Show Total Weapons by Sides
                     [msg, page] = await repoShowWeaponsBySides()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all weapons's sides...\n\n${msg}`)
                     break
 
-                case 13: // Show All Vehicles
+                case 14: // Show All Vehicles
                     [msg, page] = await repoAllVehicles(ctx)
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
                     generatePaginationBot(ctx,page,'/Show All Vehicle')
                     break
-                case 14: // Show Total Vehicle by Country
+                case 15: // Show Total Vehicle by Country
                     [msg, page] = await repoShowVehiclesByCountry()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's country...\n\n${msg}`)
                     break
-                case 15: // Show Total Vehicle by Role
+                case 16: // Show Total Vehicle by Role
                     [msg, page] = await repoShowVehiclesByRole()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's role...\n\n${msg}`)
                     break
-                case 16: // Show Total Vehicle by Sides
+                case 17: // Show Total Vehicle by Sides
                     [msg, page] = await repoShowVehiclesBySides()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles's sides...\n\n${msg}`)
                     break
 
-                case 17: // Show Total Facility by Country
+                case 18: // Show Total Facility by Country
                     [msg, page] = await repoShowFacilitiesByCountry()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's country...\n\n${msg}`)
                     break
-                case 18: // Show Total Facility by Type
+                case 19: // Show Total Facility by Type
                     [msg, page] = await repoShowFacilitiesByType()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's type...\n\n${msg}`)
                     break
-                case 19: // Show Total Facility by Sides
+                case 20: // Show Total Facility by Sides
                     [msg, page] = await repoShowFacilitiesBySides()
                     ctx.reply(`${present_respond[idx_rand_present-1]} all facilities's sides...\n\n${msg}`)
+                    break
+                
+                case 21: // Show All Book
+                    [msg, page] = await repoAllBooks(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} all books...\n\n${msg}`)
+                    generatePaginationBot(ctx,page,'/Show All Book')
                     break
                 
                 default:
@@ -170,7 +185,7 @@ bot.on('message', async (ctx) => {
             ctx.reply(`Please choose an option in Menu:`, 
                 Markup.keyboard(menuOptions.map(option => [option])).resize()
             );
-        } else if (/^Page \d+ - \/Show All (Airplane|Ship|Event|Weapon|Vehicle)$/.test(message)) {
+        } else if (/^Page \d+ - \/Show All (Airplane|Ship|Event|Weapon|Vehicle|Book)$/.test(message)) {
             const parts = message.split(' - ')
             const selectedPage = parseInt(parts[0].split(' ')[1])
             const topic = parts[1]
@@ -197,6 +212,10 @@ bot.on('message', async (ctx) => {
                 [msg, page] = await repoAllVehicles(ctx)
                 ctx.reply(`${present_respond[idx_rand_present-1]} all vehicles...\n\n${msg}`)
                 generatePaginationBot(ctx, page, '/Show All Vehicle')
+            } else if(topic === '/Show All Book'){
+                [msg, page] = await repoAllBooks(ctx)
+                ctx.reply(`${present_respond[idx_rand_present-1]} all books...\n\n${msg}`)
+                generatePaginationBot(ctx, page, '/Show All Book')
             }
 
             ctx.reply(`Opened page ${selectedPage}`);

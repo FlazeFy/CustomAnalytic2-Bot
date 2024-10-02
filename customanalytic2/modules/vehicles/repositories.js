@@ -22,7 +22,7 @@ const repoAllVehicles = async (ctx) => {
 
 const repoShowVehiclesByCountry = async () => {
     try {
-        const [data, status] = await handleShowVehiclesByCountry(20)
+        const [data, status] = await handleShowVehiclesByCountry(7)
         
         if(data){
             let msg = ''
@@ -41,7 +41,7 @@ const repoShowVehiclesByCountry = async () => {
 
 const repoShowVehiclesByRole = async () => {
     try {
-        const [data, status] = await handleShowVehiclesByRole(20)
+        const [data, status] = await handleShowVehiclesByRole(7)
         
         if(data){
             let msg = ''

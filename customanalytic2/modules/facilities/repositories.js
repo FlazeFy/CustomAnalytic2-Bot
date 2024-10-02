@@ -2,7 +2,7 @@ const { handleShowFacilitiesByCountry, handleShowFacilitiesByType, handleShowFac
 
 const repoShowFacilitiesByCountry = async () => {
     try {
-        const [data, status] = await handleShowFacilitiesByCountry(20)
+        const [data, status] = await handleShowFacilitiesByCountry(7)
         
         if(data){
             let msg = ''
@@ -21,7 +21,7 @@ const repoShowFacilitiesByCountry = async () => {
 
 const repoShowFacilitiesByType = async () => {
     try {
-        const [data, status] = await handleShowFacilitiesByType(20)
+        const [data, status] = await handleShowFacilitiesByType(7)
         
         if(data){
             let msg = ''

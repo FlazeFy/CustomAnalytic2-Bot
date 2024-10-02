@@ -22,7 +22,7 @@ const repoAllShips = async (ctx) => {
 
 const repoShowShipsByCountry = async () => {
     try {
-        const [data, status] = await handleShowShipsByCountry(20)
+        const [data, status] = await handleShowShipsByCountry(7)
         
         if(data){
             let msg = ''
@@ -41,7 +41,7 @@ const repoShowShipsByCountry = async () => {
 
 const repoShowShipsByClass = async () => {
     try {
-        const [data, status] = await handleShowShipsByClass(20)
+        const [data, status] = await handleShowShipsByClass(7)
         
         if(data){
             let msg = ''
