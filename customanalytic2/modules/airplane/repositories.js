@@ -1,4 +1,4 @@
-const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides, handleShowAirplanesByManufacturer } = require("./queries")
+const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides, handleShowAirplanesByManufacturer, handleShowAirplaneSummary } = require("./queries")
 
 const repoAllAirplane = async (ctx) => {
     try {
@@ -97,10 +97,27 @@ const repoShowAirplanesByManufacturer = async () => {
     }
 }
 
+const repoShowAirplaneSummary = async () => {
+    try {
+        const [data, status] = await handleShowAirplaneSummary()
+        
+        if(data){
+            let msg = `Overall in this war, The most produced aircraft by role is <b>${data.most_produced}</b> which have been produced about <b>${data.total}</b> variant. This role of aircraft is mainly produced by <b>${data.most_produced_by_country}</b>. Average country has produced about <b>${data.average_by_country}</b> variant of aircraft`
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
     repoAllAirplane,
     repoShowAirplanesByCountry,
     repoShowAirplanesByRole,
     repoShowAirplanesBySides, 
-    repoShowAirplanesByManufacturer
+    repoShowAirplanesByManufacturer,
+    repoShowAirplaneSummary
 }

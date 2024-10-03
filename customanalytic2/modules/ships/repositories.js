@@ -1,4 +1,4 @@
-const { handleShowAllShips, handleShowShipsByClass,handleShowShipsBySides,handleShowShipsByCountry } = require("./queries")
+const { handleShowAllShips, handleShowShipsByClass,handleShowShipsBySides,handleShowShipsByCountry, handleShowShipSummary } = require("./queries")
 
 const repoAllShips = async (ctx) => {
     try {
@@ -77,10 +77,26 @@ const repoShowShipsBySides = async () => {
     }
 }
 
+const repoShowShipSummary = async () => {
+    try {
+        const [data, status] = await handleShowShipSummary()
+        
+        if(data){
+            let msg = `Overall in this war, The most produced ships by class is <b>${data.most_produced}</b> which have been produced about <b>${data.total}</b> variant. This class of ships is mainly produced by <b>${data.most_produced_by_country}</b>. Average country has produced about <b>${data.average_by_country}</b> variant of ships. Most of these ships built on year of <b>${data.most_built_year}</b>.`
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
 
 module.exports = {
     repoAllShips,
     repoShowShipsByCountry,
     repoShowShipsBySides,
-    repoShowShipsByClass
+    repoShowShipsByClass,
+    repoShowShipSummary
 }
