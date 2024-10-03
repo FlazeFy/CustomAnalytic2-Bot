@@ -2,12 +2,7 @@ const axios = require('axios')
 
 const handleShowFacilitiesByType = async (limit) => {
     try {
-        const userId = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmFtZSI6Imxlb25hcmRobyByIHNpdGFuZ2dhbmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjQyODI5NjgsImV4cCI6MTcyNDI5Mzc2OH0.BUrt1cAMIXDp6iSjZDvbH5Wep51FJ818H7lnkSJxMd4'
-        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bytype/${limit}`, {
-            headers: {
-                'Authorization': `Bearer ${userId}`
-            }
-        })
+        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bytype/${limit}`)
         const res = response.data
         const data = res.data
 
@@ -19,12 +14,7 @@ const handleShowFacilitiesByType = async (limit) => {
 
 const handleShowFacilitiesByCountry = async (limit) => {
     try {
-        const userId = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmFtZSI6Imxlb25hcmRobyByIHNpdGFuZ2dhbmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjQyODI5NjgsImV4cCI6MTcyNDI5Mzc2OH0.BUrt1cAMIXDp6iSjZDvbH5Wep51FJ818H7lnkSJxMd4'
-        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bycountry/${limit}`, {
-            headers: {
-                'Authorization': `Bearer ${userId}`
-            }
-        })
+        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bycountry/${limit}`)
         const res = response.data
         const data = res.data
 
@@ -36,12 +26,7 @@ const handleShowFacilitiesByCountry = async (limit) => {
 
 const handleShowFacilitiesBySides = async () => {
     try {
-        const userId = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmFtZSI6Imxlb25hcmRobyByIHNpdGFuZ2dhbmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjQyODI5NjgsImV4cCI6MTcyNDI5Mzc2OH0.BUrt1cAMIXDp6iSjZDvbH5Wep51FJ818H7lnkSJxMd4'
-        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bysides`, {
-            headers: {
-                'Authorization': `Bearer ${userId}`
-            }
-        })
+        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/total/bysides`)
         const res = response.data
         const data = res.data
 
@@ -53,12 +38,19 @@ const handleShowFacilitiesBySides = async () => {
 
 const handleShowFacilitySummary = async () => {
     try {
-        const userId = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmFtZSI6Imxlb25hcmRobyByIHNpdGFuZ2dhbmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjQyODI5NjgsImV4cCI6MTcyNDI5Mzc2OH0.BUrt1cAMIXDp6iSjZDvbH5Wep51FJ818H7lnkSJxMd4'
-        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/summary`, {
-            headers: {
-                'Authorization': `Bearer ${userId}`
-            }
-        })
+        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/summary`)
+        const res = response.data
+        const data = res.data
+
+        return [data, 'success']
+    } catch (err) {
+        return [null, err]
+    }
+}
+
+const handleShowNearestFacility = async (limit, lat, long) => {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/facilities/nearest/${limit}/${lat}/${long}`)
         const res = response.data
         const data = res.data
 
@@ -72,5 +64,6 @@ module.exports = {
     handleShowFacilitiesByType,
     handleShowFacilitiesByCountry, 
     handleShowFacilitiesBySides,
-    handleShowFacilitySummary
+    handleShowFacilitySummary,
+    handleShowNearestFacility
 }

@@ -14,7 +14,7 @@ const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShip
 const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType, repoShowWeaponSummary } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole, repoShowVehicleSummary } = require('./modules/vehicles/repositories')
-const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides, repoShowFacilitySummary } = require('./modules/facilities/repositories')
+const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides, repoShowFacilitySummary, repoShowNearestFacilities } = require('./modules/facilities/repositories')
 const { generatePaginationBot } = require('./helpers/telegram')
 const { repoAllBooks } = require('./modules/book/repositories')
 const { repoShowCasualitiesSummary } = require('./modules/casualities/repositories')
@@ -66,6 +66,24 @@ bot.start( async (ctx) => {
         Markup.keyboard(menuOptions.map(option => [option])).resize()
     );
 });
+
+bot.on('location', async (ctx) => {
+    // Respond / Presenting data
+    const present_respond = ['Showing','Let me show you the',"Here's the","I got the","See this","I gathered","I found"]
+    const user_location = ctx.message.location
+    const latitude = user_location.latitude
+    const longitude = user_location.longitude
+
+    if(latitude && longitude){
+        const idx_rand_present = generateRandomNumber(1,present_respond.length)
+        let [msg, page] = await repoShowNearestFacilities(latitude,longitude)
+        ctx.reply(`${present_respond[idx_rand_present-1]} nearest facilities...\n\n${msg}<i>Info : For your privacy, we dont save your location 😉</i>`, {
+            parse_mode:'HTML'
+        })
+    } else {
+        ctx.reply(`Sorry, can't find your location`)
+    }
+})
 
 bot.on('message', async (ctx) => {
     // Respond / Presenting data

@@ -1,4 +1,4 @@
-const { handleShowFacilitiesByCountry, handleShowFacilitiesByType, handleShowFacilitiesBySides, handleShowFacilitySummary } = require("./queries")
+const { handleShowFacilitiesByCountry, handleShowFacilitiesByType, handleShowFacilitiesBySides, handleShowFacilitySummary, handleShowNearestFacility } = require("./queries")
 
 const repoShowFacilitiesByCountry = async () => {
     try {
@@ -73,9 +73,29 @@ const repoShowFacilitySummary = async () => {
     }
 }
 
+const repoShowNearestFacilities = async (lat, long) => {
+    try {
+        const [data, status] = await handleShowNearestFacility(10, lat, long)
+        
+        if(data){
+            let msg = ''
+            data.forEach((el,idx) => {
+                msg += `Name : ${el.name}\nType : ${el.type}\nLocation : ${el.location} - ${el.country}\nCoordinate : ${el.coordinate}\nDistance (Km) : ${(el.distance_meters/1000).toFixed(2)} km\nhttps://www.google.com/maps/place/${el.coordinate.replace(' ','')}\n\n`
+            });
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
     repoShowFacilitiesByCountry,
     repoShowFacilitiesByType,
     repoShowFacilitiesBySides,
-    repoShowFacilitySummary
+    repoShowFacilitySummary,
+    repoShowNearestFacilities
 }
