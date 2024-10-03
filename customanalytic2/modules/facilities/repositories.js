@@ -1,4 +1,4 @@
-const { handleShowFacilitiesByCountry, handleShowFacilitiesByType, handleShowFacilitiesBySides } = require("./queries")
+const { handleShowFacilitiesByCountry, handleShowFacilitiesByType, handleShowFacilitiesBySides, handleShowFacilitySummary } = require("./queries")
 
 const repoShowFacilitiesByCountry = async () => {
     try {
@@ -57,8 +57,25 @@ const repoShowFacilitiesBySides = async () => {
     }
 }
 
+const repoShowFacilitySummary = async () => {
+    try {
+        const [data, status] = await handleShowFacilitySummary()
+        
+        if(data){
+            let msg = `Overall in this war, The most built facilities by type is <b>${data.most_built}</b> which have been built about <b>${data.total}</b> facilities. This type of facilities is mainly built by <b>${data.most_built_by_country}</b>. Average country has built about <b>${data.average_by_country}</b> facilities`
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
     repoShowFacilitiesByCountry,
     repoShowFacilitiesByType,
-    repoShowFacilitiesBySides
+    repoShowFacilitiesBySides,
+    repoShowFacilitySummary
 }

@@ -11,12 +11,13 @@ const { generateRandomNumber } = require('./helpers/generator')
 // Modules
 const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole, repoShowAirplanesByManufacturer, repoShowAirplaneSummary } = require('./modules/airplane/repositories')
 const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides, repoShowShipSummary } = require('./modules/ships/repositories')
-const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType } = require('./modules/weapons/repositories')
+const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType, repoShowWeaponSummary } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole, repoShowVehicleSummary } = require('./modules/vehicles/repositories')
-const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides } = require('./modules/facilities/repositories')
+const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides, repoShowFacilitySummary } = require('./modules/facilities/repositories')
 const { generatePaginationBot } = require('./helpers/telegram')
 const { repoAllBooks } = require('./modules/book/repositories')
+const { repoShowCasualitiesSummary } = require('./modules/casualities/repositories')
 
 const bot = new Telegraf(conf.TOKEN)
 bot.use(session())
@@ -54,6 +55,9 @@ const menuOptions = [
     '/Show Aircraft Summary',
     '/Show Ship Summary',
     '/Show Vehicle Summary',
+    '/Show Casualities Summary',
+    '/Show Facility Summary',
+    '/Show Weapon Summary'
 ];
 
 bot.start( async (ctx) => {
@@ -192,6 +196,18 @@ bot.on('message', async (ctx) => {
                 case 24: // Show Vehicle Summary
                     [msg, page] = await repoShowVehicleSummary(ctx)
                     ctx.reply(`${present_respond[idx_rand_present-1]} vehicle summary...\n\n${msg}`,{ parse_mode:'html' })
+                    break
+                case 25: // Show Casualities Summary
+                    [msg, page] = await repoShowCasualitiesSummary(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} casualities summary...\n\n${msg}`,{ parse_mode:'html' })
+                    break
+                case 26: // Show Facility Summary
+                    [msg, page] = await repoShowFacilitySummary(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} facility summary...\n\n${msg}`,{ parse_mode:'html' })
+                    break
+                case 27: // Show Weapon Summary
+                    [msg, page] = await repoShowWeaponSummary(ctx)
+                    ctx.reply(`${present_respond[idx_rand_present-1]} weapon summary...\n\n${msg}`,{ parse_mode:'html' })
                     break
                 
                 default:

@@ -1,4 +1,4 @@
-const { handleShowAllWeapons, handleShowWeaponsByCountry, handleShowWeaponsByType, handleShowWeaponsBySides } = require("./queries")
+const { handleShowAllWeapons, handleShowWeaponsByCountry, handleShowWeaponsByType, handleShowWeaponsBySides, handleShowWeaponSummary } = require("./queries")
 
 const repoAllWeapons = async (ctx) => {
     try {
@@ -77,9 +77,26 @@ const repoShowWeaponsBySides = async () => {
     }
 }
 
+const repoShowWeaponSummary = async () => {
+    try {
+        const [data, status] = await handleShowWeaponSummary()
+        
+        if(data){
+            let msg = `Overall in this war, The most produced weapons by type is <b>${data.most_produced}</b> which have been produced about <b>${data.total}</b> variant. This weapon is mainly produced by <b>${data.most_produced_by_country}</b>. Average country has produced about <b>${data.average_by_country}</b> variant of weapon.`
+
+            return [msg, null]
+        } else {
+            return [status, null]
+        }
+    } catch (err) {
+        return [err, null]
+    }
+}
+
 module.exports = {
     repoAllWeapons,
     repoShowWeaponsByCountry,
     repoShowWeaponsByType,
-    repoShowWeaponsBySides
+    repoShowWeaponsBySides,
+    repoShowWeaponSummary
 }
