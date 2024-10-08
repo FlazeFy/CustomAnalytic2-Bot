@@ -1,4 +1,5 @@
 const { handleShowAllWeapons, handleShowWeaponsByCountry, handleShowWeaponsByType, handleShowWeaponsBySides, handleShowWeaponSummary } = require("./queries")
+const createCsvWriter = require('csv-writer').createObjectCsvWriter
 
 const repoAllWeapons = async (ctx) => {
     try {
@@ -17,6 +18,44 @@ const repoAllWeapons = async (ctx) => {
         }
     } catch (err) {
         return [err, null]
+    }
+}
+
+const repoWeaponDoc = async () => {
+    try {
+        const [data, page_length, status] = await handleShowAllWeapons(1,'desc','all')
+
+        if(data){
+            const rows = []
+            const date = new Date()
+
+            data.forEach((dt, i) => {
+                rows.push({
+                    name: dt.name, 
+                    type: dt.type,
+                    country: dt.country
+                })
+            })
+
+            const path = `weapon_list_${date}.csv`
+            const filename = `weapon_list_${date}.csv`
+            const csvWriter = createCsvWriter({
+                path: path,
+                header: [
+                    { id: 'name', title: 'Name' },
+                    { id: 'type', title: 'Type' },
+                    { id: 'country', title: 'Country' }
+                ]
+            });
+
+            await csvWriter.writeRecords(rows)
+            
+            return [status, path, filename]
+        } else {
+            return [status, null, null]
+        }
+    } catch (err) {
+        return [err, null, null]
     }
 }
 
@@ -98,5 +137,6 @@ module.exports = {
     repoShowWeaponsByCountry,
     repoShowWeaponsByType,
     repoShowWeaponsBySides,
-    repoShowWeaponSummary
+    repoShowWeaponSummary,
+    repoWeaponDoc
 }

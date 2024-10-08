@@ -1,4 +1,5 @@
 const { handleShowAllShips, handleShowShipsByClass,handleShowShipsBySides,handleShowShipsByCountry, handleShowShipSummary } = require("./queries")
+const createCsvWriter = require('csv-writer').createObjectCsvWriter
 
 const repoAllShips = async (ctx) => {
     try {
@@ -17,6 +18,46 @@ const repoAllShips = async (ctx) => {
         }
     } catch (err) {
         return [err, null]
+    }
+}
+
+const repoShipDoc = async () => {
+    try {
+        const [data, page_length, status] = await handleShowAllShips(1,'desc','all')
+
+        if(data){
+            const rows = []
+            const date = new Date()
+
+            data.forEach((dt, i) => {
+                rows.push({
+                    name: dt.name, 
+                    class: dt.class,
+                    launch_year: dt.launch_year,
+                    country: dt.country
+                })
+            })
+
+            const path = `ship_list_${date}.csv`
+            const filename = `ship_list_${date}.csv`
+            const csvWriter = createCsvWriter({
+                path: path,
+                header: [
+                    { id: 'name', title: 'Name' },
+                    { id: 'class', title: 'Class' },
+                    { id: 'launch_year', title: 'Launch Year' },
+                    { id: 'country', title: 'Country' }
+                ]
+            });
+
+            await csvWriter.writeRecords(rows)
+            
+            return [status, path, filename]
+        } else {
+            return [status, null, null]
+        }
+    } catch (err) {
+        return [err, null, null]
     }
 }
 
@@ -98,5 +139,6 @@ module.exports = {
     repoShowShipsByCountry,
     repoShowShipsBySides,
     repoShowShipsByClass,
-    repoShowShipSummary
+    repoShowShipSummary,
+    repoShipDoc
 }

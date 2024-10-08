@@ -9,9 +9,9 @@ const conf = JSON.parse(configFile)
 const { generateRandomNumber } = require('./helpers/generator')
 
 // Modules
-const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole, repoShowAirplanesByManufacturer, repoShowAirplaneSummary } = require('./modules/airplane/repositories')
-const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides, repoShowShipSummary } = require('./modules/ships/repositories')
-const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType, repoShowWeaponSummary } = require('./modules/weapons/repositories')
+const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole, repoShowAirplanesByManufacturer, repoShowAirplaneSummary, repoAirplaneDoc } = require('./modules/airplane/repositories')
+const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides, repoShowShipSummary, repoShipDoc } = require('./modules/ships/repositories')
+const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType, repoShowWeaponSummary, repoWeaponDoc } = require('./modules/weapons/repositories')
 const { repoAllEvents } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole, repoShowVehicleSummary } = require('./modules/vehicles/repositories')
 const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides, repoShowFacilitySummary, repoShowNearestFacilities } = require('./modules/facilities/repositories')
@@ -57,7 +57,11 @@ const menuOptions = [
     '/Show Vehicle Summary',
     '/Show Casualities Summary',
     '/Show Facility Summary',
-    '/Show Weapon Summary'
+    '/Show Weapon Summary',
+
+    '/Download Airplane Dataset',
+    '/Download Ship Dataset',
+    '/Download Weapon Dataset'
 ];
 
 bot.start( async (ctx) => {
@@ -228,6 +232,48 @@ bot.on('message', async (ctx) => {
                     ctx.reply(`${present_respond[idx_rand_present-1]} weapon summary...\n\n${msg}`,{ parse_mode:'html' })
                     break
                 
+                case 28: // Generate Airplane CSV
+                    [msg, path, filename] = await repoAirplaneDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of airplane`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
+                case 29: // Generate Ship CSV
+                    [msg, path, filename] = await repoShipDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of ship`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
+                case 30: // Generate Weapon CSV
+                    [msg, path, filename] = await repoWeaponDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of weapon`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
                 default:
                     ctx.reply(`Sorry I'dont know your command`)
                     break

@@ -1,4 +1,5 @@
 const { handleShowAllAirplane, handleShowAirplanesByCountry, handleShowAirplanesByRole, handleShowAirplanesBySides, handleShowAirplanesByManufacturer, handleShowAirplaneSummary } = require("./queries")
+const createCsvWriter = require('csv-writer').createObjectCsvWriter
 
 const repoAllAirplane = async (ctx) => {
     try {
@@ -20,6 +21,45 @@ const repoAllAirplane = async (ctx) => {
     }
 }
 
+const repoAirplaneDoc = async () => {
+    try {
+        const [data, page_length, status] = await handleShowAllAirplane(1,'desc','all')
+
+        if(data){
+            const rows = []
+            const date = new Date()
+
+            data.forEach((dt, i) => {
+                rows.push({
+                    name: dt.name, 
+                    primary_role: dt.primary_role,
+                    manufacturer: dt.manufacturer,
+                    country: dt.country
+                })
+            })
+
+            const path = `aircraft_list_${date}.csv`
+            const filename = `aircraft_list_${date}.csv`
+            const csvWriter = createCsvWriter({
+                path: path,
+                header: [
+                    { id: 'name', title: 'Name' },
+                    { id: 'primary_role', title: 'Primary Role' },
+                    { id: 'manufacturer', title: 'Manufacturer' },
+                    { id: 'country', title: 'Country' }
+                ]
+            });
+
+            await csvWriter.writeRecords(rows)
+            
+            return [status, path, filename]
+        } else {
+            return [status, null, null]
+        }
+    } catch (err) {
+        return [err, null, null]
+    }
+}
 
 const repoShowAirplanesByCountry = async () => {
     try {
@@ -119,5 +159,6 @@ module.exports = {
     repoShowAirplanesByRole,
     repoShowAirplanesBySides, 
     repoShowAirplanesByManufacturer,
-    repoShowAirplaneSummary
+    repoShowAirplaneSummary,
+    repoAirplaneDoc
 }
