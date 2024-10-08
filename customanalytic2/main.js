@@ -12,12 +12,12 @@ const { generateRandomNumber } = require('./helpers/generator')
 const { repoAllAirplane, repoShowAirplanesByCountry, repoShowAirplanesBySides, repoShowAirplanesByRole, repoShowAirplanesByManufacturer, repoShowAirplaneSummary, repoAirplaneDoc } = require('./modules/airplane/repositories')
 const { repoAllShips, repoShowShipsByCountry, repoShowShipsByClass, repoShowShipsBySides, repoShowShipSummary, repoShipDoc } = require('./modules/ships/repositories')
 const { repoAllWeapons, repoShowWeaponsByCountry, repoShowWeaponsBySides, repoShowWeaponsByType, repoShowWeaponSummary, repoWeaponDoc } = require('./modules/weapons/repositories')
-const { repoAllEvents } = require('./modules/events/repositories')
+const { repoAllEvents, repoEventDoc } = require('./modules/events/repositories')
 const { repoAllVehicles, repoShowVehiclesByCountry, repoShowVehiclesBySides, repoShowVehiclesByRole, repoShowVehicleSummary } = require('./modules/vehicles/repositories')
 const { repoShowFacilitiesByCountry, repoShowFacilitiesByType, repoShowFacilitiesBySides, repoShowFacilitySummary, repoShowNearestFacilities } = require('./modules/facilities/repositories')
 const { generatePaginationBot } = require('./helpers/telegram')
-const { repoAllBooks } = require('./modules/book/repositories')
-const { repoShowCasualitiesSummary } = require('./modules/casualities/repositories')
+const { repoAllBooks, repoBookDoc } = require('./modules/book/repositories')
+const { repoShowCasualitiesSummary, repoCasualitiesDoc } = require('./modules/casualities/repositories')
 
 const bot = new Telegraf(conf.TOKEN)
 bot.use(session())
@@ -61,7 +61,10 @@ const menuOptions = [
 
     '/Download Airplane Dataset',
     '/Download Ship Dataset',
-    '/Download Weapon Dataset'
+    '/Download Weapon Dataset',
+    '/Download Casualities Dataset',
+    '/Download Event Dataset',
+    '/Download Book Dataset'
 ];
 
 bot.start( async (ctx) => {
@@ -264,6 +267,48 @@ bot.on('message', async (ctx) => {
                     [msg, path, filename] = await repoWeaponDoc()
                     if(path == null){
                         ctx.reply(`Sorry, we're failed to generate the dataset of weapon`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
+                case 31: // Generate Casualities CSV
+                    [msg, path, filename] = await repoCasualitiesDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of casualities`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
+                case 32: // Generate Event CSV
+                    [msg, path, filename] = await repoEventDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of event`)
+                    } else {
+                        await ctx.replyWithDocument({
+                            source: path,
+                            filename: filename
+                        });
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        });
+                    }
+                    break
+                case 33: // Generate Book CSV
+                    [msg, path, filename] = await repoBookDoc()
+                    if(path == null){
+                        ctx.reply(`Sorry, we're failed to generate the dataset of book`)
                     } else {
                         await ctx.replyWithDocument({
                             source: path,

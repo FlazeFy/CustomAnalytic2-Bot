@@ -20,6 +20,47 @@ const repoAllBooks = async (ctx) => {
     }
 }
 
+const repoBookDoc = async () => {
+    try {
+        const [data, page_length, status] = await handleShowAllBooks(1,'desc','all')
+
+        if(data){
+            const rows = []
+            const date = new Date()
+
+            data.forEach((dt, i) => {
+                rows.push({
+                    title: dt.title, 
+                    author: dt.author,
+                    reviewer: dt.reviewer,
+                    reviewe_date: dt.reviewe_date
+                })
+            })
+
+            const path = `book_list_${date}.csv`
+            const filename = `book_list_${date}.csv`
+            const csvWriter = createCsvWriter({
+                path: path,
+                header: [
+                    { id: 'title', title: 'Name' },
+                    { id: 'author', title: 'Author' },
+                    { id: 'reviewer', title: 'Reviewer' },
+                    { id: 'reviewe_date', title: 'Reviewe Date' }
+                ]
+            });
+
+            await csvWriter.writeRecords(rows)
+            
+            return [status, path, filename]
+        } else {
+            return [status, null, null]
+        }
+    } catch (err) {
+        return [err, null, null]
+    }
+}
+
 module.exports = {
-    repoAllBooks
+    repoAllBooks,
+    repoBookDoc
 }
